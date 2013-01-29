@@ -1,0 +1,57 @@
+  // If we have a specialized evaluation function for the current material
+  // configuration, call it and return.
+  if (ei.mi->specialized_eval_exists())
+  {
+      margin = VALUE_ZERO;
+      return ei.mi->evaluate(pos);
+  }
+
+  // Read game phase
+  Phase phase = ei.mi->game_phase();
+
+  // Probe the pawn hash table
+  ei.pi = pos.this_thread()->pawnTable.probe(pos);
+  score += ei.pi->pawns_value();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         if ( alpha != -VALUE_INFINITE )
+            {
+            ScaleFactor sf = eg_value(score) > VALUE_DRAW ? ei.mi->scale_factor(pos, WHITE)
+                                                          : ei.mi->scale_factor(pos, BLACK);
+
+            Value v = interpolate(score, phase, sf);
+            v = (pos.side_to_move() == WHITE ? v : -v);
+
+  int lazy;
+  switch (lazy) {
+  case 1:
+    lazy = 730;
+    break;
+  case 2:
+    lazy = 750;
+    break;
+  case 3:
+    lazy = 770;
+    break;
+  case 4:
+    lazy = 790;
+    break;
+  case 5:
+    lazy = 810;
+    break;
+  case 6:
+    lazy = 830;
+    break;
+ case 7:
+    lazy = 860;
+    break;
+    default:
+    lazy = 830;
+}
+            if ( v <= alpha - lazy )
+            {
+            margin = VALUE_ZERO;
+            return v;
+            }
+            }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
